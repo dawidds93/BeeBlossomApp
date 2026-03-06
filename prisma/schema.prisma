@@ -1,0 +1,182 @@
+// This is your Prisma schema file for BeeBlossomApp
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING      // Oczekujące na płatność
+  PAID         // Opłacone
+  PROCESSING   // W realizacji
+  SHIPPED      // Wysłane
+  DELIVERED    // Dostarczone
+  CANCELLED    // Anulowane
+  REFUNDED     // Zwrócone
+}
+
+enum PaymentMethod {
+  PRZELEWY24
+  BLIK
+  CARD
+  BANK_TRANSFER
+}
+
+// ─── Category ────────────────────────────────────────────
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("categories")
+}
+
+// ─── Product ──────────────────────────────────────────────
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String?
+  longDesc    String?
+  price       Decimal     @db.Decimal(10, 2)
+  comparePrice Decimal?   @db.Decimal(10, 2) // Przekreślona cena
+  sku         String?     @unique
+  stock       Int         @default(0)
+  images      String[]    // tablica URL-i zdjęć
+  isActive    Boolean     @default(true)
+  isFeatured  Boolean     @default(false)
+  weight      Float?      // gramy - do kalkulacji dostawy
+  dimensions  Json?       // { width, height, depth } w cm
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  reviews     Review[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("products")
+}
+
+// ─── User ─────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  phone         String?
+  role          Role      @default(CUSTOMER)
+  emailVerified DateTime?
+  image         String?
+  orders        Order[]
+  reviews       Review[]
+  addresses     Address[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+// ─── Address ──────────────────────────────────────────────
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName  String
+  lastName   String
+  company    String?
+  street     String
+  city       String
+  postalCode String
+  country    String   @default("PL")
+  isDefault  Boolean  @default(false)
+  orders     Order[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("addresses")
+}
+
+// ─── Order ────────────────────────────────────────────────
+
+model Order {
+  id               String        @id @default(cuid())
+  orderNumber      String        @unique @default(cuid())
+  userId           String?
+  user             User?         @relation(fields: [userId], references: [id])
+  // Dane gościa (zakup bez konta)
+  guestEmail       String?
+  guestPhone       String?
+  // Adres dostawy (snapshot w momencie zakupu)
+  shippingAddressId String?
+  shippingAddress  Address?      @relation(fields: [shippingAddressId], references: [id])
+  shippingSnapshot Json?         // kopia adresu na wypadek usunięcia
+  status           OrderStatus   @default(PENDING)
+  paymentMethod    PaymentMethod?
+  paymentId        String?       // ID transakcji w Przelewy24
+  subtotal         Decimal       @db.Decimal(10, 2)
+  shippingCost     Decimal       @default(0) @db.Decimal(10, 2)
+  totalAmount      Decimal       @db.Decimal(10, 2)
+  notes            String?
+  items            OrderItem[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@map("orders")
+}
+
+// ─── OrderItem ────────────────────────────────────────────
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  productName String  // snapshot nazwy produktu
+  price      Decimal  @db.Decimal(10, 2) // cena w momencie zakupu
+  quantity   Int
+  imageUrl   String?  // snapshot zdjęcia produktu
+  createdAt  DateTime @default(now())
+
+  @@map("order_items")
+}
+
+// ─── Review ───────────────────────────────────────────────
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  authorName String   // wyświetlana nazwa (może być anonim)
+  rating     Int      // 1-5
+  title      String?
+  content    String?
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@map("reviews")
+}
