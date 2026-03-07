@@ -205,7 +205,15 @@ export default function CheckoutForm() {
             . <span className="text-red-400">*</span>
           </span>
         </label>
-        <FieldError message={errors.acceptTerms?.message} />
+        {errors.acceptTerms && (
+          <div
+            className="mt-2 flex items-center gap-2 rounded-xl bg-red-50 px-4 py-2.5 text-sm font-medium text-red-600"
+            style={{ border: '1px solid #fca5a5' }}
+          >
+            <span>⚠️</span>
+            <span>Aby dokonać zakupu musisz zaakceptować regulamin i politykę prywatności.</span>
+          </div>
+        )}
 
         <label className="flex cursor-pointer items-start gap-3">
           <input
