@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
 import ShopLayout from '@/components/layout/ShopLayout'
 import Container from '@/components/ui/Container'
 import CheckoutForm from '@/components/checkout/CheckoutForm'
