@@ -20,6 +20,7 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
   const addItem = useCartStore((s) => s.addItem)
+  const openCart = useCartStore((s) => s.openCart)
 
   if (product.stock === 0) {
     return (
@@ -45,6 +46,7 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
     }
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
+    openCart()
   }
 
   return (
