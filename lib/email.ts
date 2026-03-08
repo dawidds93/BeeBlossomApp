@@ -1,7 +1,5 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 const FROM = process.env.EMAIL_FROM ?? 'BeeBlossomApp <noreply@beeblossom.pl>'
 
 export interface OrderEmailData {
@@ -26,6 +24,13 @@ export interface OrderEmailData {
 }
 
 export async function sendOrderConfirmation(data: OrderEmailData): Promise<void> {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY not set – skipping email')
+    return
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY)
+
   const { error } = await resend.emails.send({
     from: FROM,
     to: data.customerEmail,
