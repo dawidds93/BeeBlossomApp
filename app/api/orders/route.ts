@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { registerTransaction } from '@/lib/przelewy24'
+import { sendOrderConfirmation } from '@/lib/email'
 import type { CheckoutFormData } from '@/lib/validators/checkout'
 import type { CartItem } from '@/lib/store/cart'
 
@@ -65,6 +66,24 @@ export async function POST(request: Request) {
             imageUrl: item.imageUrl,
           })),
         },
+      },
+    })
+
+    // Send order confirmation email (fire-and-forget, non-blocking)
+    void sendOrderConfirmation({
+      orderNumber,
+      customerEmail: customer.email,
+      customerName: `${customer.firstName} ${customer.lastName}`,
+      items: items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
+      subtotal,
+      shippingCost,
+      total: totalAmount,
+      shippingAddress: {
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        street: customer.street,
+        city: customer.city,
+        postalCode: customer.postalCode,
       },
     })
 
