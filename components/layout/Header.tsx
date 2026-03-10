@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { User, Menu, X, Search } from 'lucide-react'
 import Container from '@/components/ui/Container'
@@ -37,50 +38,57 @@ export default function Header() {
       <header
         className="sticky top-0 z-40 transition-all duration-300"
         style={{
-          backgroundColor: scrolled ? 'rgba(253,250,245,0.92)' : 'var(--cream)',
+          backgroundColor: scrolled ? 'rgba(232,227,222,0.92)' : 'var(--cream)',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
           boxShadow: scrolled ? '0 1px 0 rgba(61,43,31,0.08)' : 'none',
         }}
       >
         <Container>
-          <div className="flex h-16 items-center justify-between md:h-20">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="flex items-center gap-2 transition-opacity hover:opacity-80"
-              aria-label="BeeBlossomApp - strona główna"
-            >
-              <span className="text-xl">🐝</span>
-              <span
-                className="text-lg font-semibold tracking-tight"
-                style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
+          <div className="flex h-20 items-center justify-between md:h-28">
+            {/* Logo Wrapper */}
+            <div className="flex flex-1 justify-start">
+              <Link
+                href="/"
+                className="flex flex-col items-center justify-center transition-opacity hover:opacity-80"
+                aria-label="Bee Blossom - strona główna"
               >
-                BeeBlossomApp
-              </span>
-            </Link>
-
-            {/* Desktop nav */}
-            <nav className="hidden items-center gap-8 md:flex" aria-label="Nawigacja główna">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium tracking-wide transition-colors hover:opacity-60"
-                  style={{ color: 'var(--brown)' }}
+                <div
+                  className="text-2xl leading-none tracking-[0.15em] text-[#5C432E] md:text-[1.75rem]"
+                  style={{ fontFamily: 'var(--font-serif)' }}
                 >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+                  BEE BLOSSOM
+                </div>
+                <div className="my-[0.35rem] h-[1px] w-10 bg-[#5C432E] opacity-50"></div>
+                <div className="ml-1 text-[0.55rem] leading-none tracking-[0.25em] text-[#5C432E] uppercase md:text-[0.6rem]">
+                  NATURALNY WOSK PSZCZELI
+                </div>
+              </Link>
+            </div>
 
-            {/* Icons */}
-            <div className="flex items-center gap-3">
+            {/* Desktop nav Wrapper */}
+            <div className="hidden flex-none justify-center md:flex">
+              <nav className="flex items-center gap-10" aria-label="Nawigacja główna">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-lg font-medium tracking-wide transition-colors hover:opacity-60"
+                    style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Icons Wrapper */}
+            <div className="flex flex-1 items-center justify-end gap-5">
               <button
                 className="hidden cursor-pointer rounded-full p-2 transition-colors hover:bg-black/5 md:flex"
                 aria-label="Szukaj"
                 style={{ color: 'var(--brown)' }}
               >
-                <Search size={18} />
+                <Search size={22} strokeWidth={1.5} />
               </button>
               <Link
                 href="/konto"
@@ -88,9 +96,11 @@ export default function Header() {
                 aria-label="Moje konto"
                 style={{ color: 'var(--brown)' }}
               >
-                <User size={18} />
+                <User size={22} strokeWidth={1.5} />
               </Link>
-              <CartButton />
+              <div className="scale-110">
+                <CartButton />
+              </div>
               {/* Mobile hamburger */}
               <button
                 className="cursor-pointer rounded-full p-2 transition-colors hover:bg-black/5 md:hidden"
@@ -136,7 +146,7 @@ export default function Header() {
             className="text-base font-semibold"
             style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
           >
-            Menu
+            Nawigacja
           </span>
           <button
             onClick={() => setMobileOpen(false)}

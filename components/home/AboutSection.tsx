@@ -37,7 +37,7 @@ export default function AboutSection() {
               <em>i miłości do natury</em>
             </h2>
             <p className="mb-4 leading-relaxed" style={{ color: 'var(--warm-gray)' }}>
-              BeeBlossomApp to mała rodzinna pracownia, w której każda świeca i każdy bukiet
+              Bee Blossom to mała rodzinna pracownia, w której każda świeca i każdy bukiet
               powstawają ręcznie. Używamy wyłącznie naturalnego wosku pszczelego, doceniając jego
               wyjątkowe właściwości – czysty, długo palący się, z delikatnym miodowym zapachem.
             </p>

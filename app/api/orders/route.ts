@@ -93,7 +93,7 @@ export async function POST(request: Request) {
         sessionId: order.id,
         amount: Math.round(totalAmount * 100), // grosze
         currency: 'PLN',
-        description: `Zamówienie ${orderNumber} – BeeBlossomApp`,
+        description: `Zamówienie ${orderNumber} – Bee Blossom`,
         email: customer.email,
         country: 'PL',
         language: 'pl',
