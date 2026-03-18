@@ -29,7 +29,7 @@ export async function createProduct(formData: z.infer<typeof productSchema>) {
 
   revalidatePath("/admin/products");
   revalidatePath("/produkty");
-  return newProduct;
+  return { success: true };
 }
 
 export async function updateProduct(id: string, formData: z.infer<typeof productSchema>) {
@@ -46,12 +46,20 @@ export async function updateProduct(id: string, formData: z.infer<typeof product
   revalidatePath("/admin/products");
   revalidatePath("/produkty");
   revalidatePath(`/produkt/${parsed.slug}`);
-  return updatedProduct;
+  return { success: true };
 }
 
 export async function deleteProduct(id: string) {
   await requireAdmin();
-  await prisma.product.delete({ where: { id } });
-  revalidatePath("/admin/products");
-  revalidatePath("/produkty");
+  try {
+    await prisma.product.delete({ where: { id } });
+    revalidatePath("/admin/products");
+    revalidatePath("/produkty");
+    return { success: true };
+  } catch (error: any) {
+    if (error.code === 'P2003') {
+      return { success: false, error: "Nie można usunąć produktu widniejącego w systemie zamówień. Ukryj go odznaczając stan -Aktywny- w tabeli." };
+    }
+    return { success: false, error: "Wystąpił nieoczekiwany błąd podczas usuwania." };
+  }
 }

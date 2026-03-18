@@ -11,9 +11,12 @@ export default function DeleteProductButton({ id }: { id: string }) {
     if (confirm("Czy na pewno chcesz usunąć ten produkt? Operacji nie można cofnąć.")) {
       startTransition(async () => {
         try {
-          await deleteProduct(id);
-        } catch (error) {
-          alert("Błąd podczas usuwania produktu.");
+          const res = await deleteProduct(id);
+          if (res?.error) {
+            alert(res.error);
+          }
+        } catch (error: any) {
+          alert(error.message || "Błąd podczas usuwania produktu.");
         }
       });
     }

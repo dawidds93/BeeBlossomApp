@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { createProduct, updateProduct } from "@/actions/admin/products";
-import { UploadDropzone } from "@/lib/uploadthing";
+import { UploadButton } from "@/lib/uploadthing";
 import { X } from "lucide-react";
 
 const productSchema = z.object({
@@ -166,12 +166,12 @@ export default function ProductForm({ initialData, categories }: Props) {
             </div>
           ))}
         </div>
-        <div className="border border-dashed p-4 rounded-lg">
-          <UploadDropzone
+        <div className="border border-dashed p-4 rounded-lg flex justify-center items-center h-32">
+          <UploadButton
             endpoint="productImage"
-            onClientUploadComplete={(res) => {
+            onClientUploadComplete={(res: any[]) => {
               if (res) {
-                setImages(prev => [...prev, ...res.map(r => r.url)]);
+                setImages(prev => [...prev, ...res.map((r: any) => r.url)]);
               }
             }}
             onUploadError={(error: Error) => {

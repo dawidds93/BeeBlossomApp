@@ -1,3 +1,4 @@
+import "@uploadthing/react/styles.css";
 import { ReactNode } from "react";
 import Link from "next/link";
 import { LayoutDashboard, Package, ShoppingCart, LogOut } from "lucide-react";

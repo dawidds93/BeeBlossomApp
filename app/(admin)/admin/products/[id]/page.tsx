@@ -5,17 +5,26 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 
-export default async function EditProductPage({ params }: { params: { id: string } }) {
+// Wymuszenie przeładowania cache Next.js Turbopack
+
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
+  const resolvedParams = await params;
   const categories = await prisma.category.findMany({ select: { id: true, name: true } });
   
   const product = await prisma.product.findUnique({
-    where: { id: params.id }
+    where: { id: resolvedParams.id }
   });
 
   if (!product) {
     return notFound();
   }
+
+  const serializedProduct = {
+    ...product,
+    price: Number(product.price),
+    comparePrice: product.comparePrice ? Number(product.comparePrice) : null,
+  };
 
   return (
     <div className="p-8">
@@ -26,7 +35,7 @@ export default async function EditProductPage({ params }: { params: { id: string
         <h1 className="text-2xl font-bold">Edytuj produkt: {product.name}</h1>
       </div>
       
-      <ProductForm categories={categories} initialData={product} />
+      <ProductForm categories={categories} initialData={serializedProduct} />
     </div>
   );
 }
