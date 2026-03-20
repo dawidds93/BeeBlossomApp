@@ -18,23 +18,23 @@ export default function HeroSection() {
             className="mb-6 text-4xl leading-tight md:text-5xl lg:text-6xl"
             style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
           >
-            Świece i bukiety
+            Flower boxy i zestawy
             <br />
-            <em>z wosku pszczelego</em>
+            upominkowe na każdą okazję
           </h1>
           <p
             className="mb-8 max-w-md text-base leading-relaxed"
             style={{ color: 'var(--warm-gray)' }}
           >
-            Każdy produkt powstaje ręcznie, z naturalnego wosku pszczelego. Idealny prezent i
+            Każdy produkt powstaje ręcznie z najwyższą dbałością o detale. Idealny prezent i
             wyjątkowa dekoracja Twojego domu.
           </p>
           <div className="flex flex-wrap gap-4">
             <Button href="/produkty" size="lg">
               Odkryj kolekcję
             </Button>
-            <Button href="/produkty?kategoria=bukiety" variant="ghost" size="lg">
-              Bukiety z wosku
+            <Button href="/produkty?kategoria=flower-boxy-pure" variant="ghost" size="lg">
+              Kolekcja Pure
             </Button>
           </div>
 
@@ -58,8 +58,8 @@ export default function HeroSection() {
         {/* Image side */}
         <div className="relative min-h-64 flex-1 md:min-h-auto">
           <Image
-            src="/hero.png"
-            alt="Ręcznie robione świece i bukiety z wosku pszczelego"
+            src="/hero.jpg"
+            alt="Ręcznie robione flower boxy i zestawy upominkowe"
             fill
             priority
             className="object-cover"

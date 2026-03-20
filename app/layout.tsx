@@ -3,15 +3,15 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Bee Blossom – Świece i bukiety z wosku pszczelego',
+    default: 'Bee Blossom – Flower boxy i zestawy upominkowe',
     template: '%s | Bee Blossom',
   },
   description:
-    'Ręcznie robione świece i bukiety z wosku pszczelego. Naturalne, ekologiczne produkty dla domu i jako wyjątkowy prezent.',
+    'Ręcznie robione flower boxy i zestawy upominkowe. Naturalne, ekologiczne produkty dla domu i jako wyjątkowy prezent.',
   keywords: [
-    'świece z wosku pszczelego',
-    'bukiety z wosku',
-    'naturalne świece',
+    'flower boxy',
+    'zestawy upominkowe',
+    'flower boxy pure',
     'prezent handmade',
   ],
   openGraph: {

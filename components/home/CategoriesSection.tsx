@@ -4,25 +4,25 @@ import Container from '@/components/ui/Container'
 
 const categories = [
   {
-    slug: 'swiece',
-    name: 'Świece',
-    desc: 'Klasyczne i ozdobne świece z wosku pszczelego',
-    image: '/categories/swiece.png',
-    href: '/produkty?kategoria=swiece',
+    slug: 'flower-boxy-pure',
+    name: 'Flower boxy - Pure',
+    desc: 'Eleganckie flower boxy w czystym stylu',
+    image: '/categories/pure.jpg',
+    href: '/produkty?kategoria=flower-boxy-pure',
   },
   {
-    slug: 'bukiety',
-    name: 'Bukiety',
-    desc: 'Wyjątkowe bukiety z woskowych kwiatów',
-    image: '/categories/bukiety.png',
-    href: '/produkty?kategoria=bukiety',
+    slug: 'flower-boxy-color',
+    name: 'Flower boxy - Color',
+    desc: 'Kolorowe i radosne kompozycje flower boxów',
+    image: '/categories/color.jpg',
+    href: '/produkty?kategoria=flower-boxy-color',
   },
   {
-    slug: 'zestawy',
-    name: 'Zestawy prezentowe',
-    desc: 'Gotowe zestawy na każdą okazję',
-    image: '/categories/zestawy.png',
-    href: '/produkty?kategoria=zestawy',
+    slug: 'zestawy-upominkowe',
+    name: 'Zestawy upominkowe',
+    desc: 'Wyjątkowe zestawy prezentowe na każdą okazję',
+    image: '/categories/zestawy.jpg',
+    href: '/produkty?kategoria=zestawy-upominkowe',
   },
 ]
 

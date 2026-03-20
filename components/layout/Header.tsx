@@ -8,9 +8,15 @@ import Container from '@/components/ui/Container'
 import CartButton from '@/components/cart/CartButton'
 
 const navLinks = [
-  { href: '/produkty', label: 'Sklep' },
-  { href: '/produkty?kategoria=swiece', label: 'Świece' },
-  { href: '/produkty?kategoria=bukiety', label: 'Bukiety' },
+  { 
+    href: '/produkty', 
+    label: 'Sklep',
+    subLinks: [
+      { href: '/produkty?kategoria=flower-boxy-pure', label: 'Flower Boxy Pure', hasSizes: true },
+      { href: '/produkty?kategoria=flower-boxy-color', label: 'Flower Boxy Color', hasSizes: true },
+      { href: '/produkty?kategoria=zestawy-upominkowe', label: 'Zestawy upominkowe' },
+    ]
+  },
   { href: '/o-nas', label: 'O nas' },
   { href: '/kontakt', label: 'Kontakt' },
 ]
@@ -67,16 +73,46 @@ export default function Header() {
 
             {/* Desktop nav Wrapper */}
             <div className="hidden flex-none justify-center md:flex">
-              <nav className="flex items-center gap-10" aria-label="Nawigacja główna">
+              <nav className="flex items-center gap-10 lg:gap-14" aria-label="Nawigacja główna">
                 {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-lg font-medium tracking-wide transition-colors hover:opacity-60"
-                    style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
-                  >
-                    {link.label}
-                  </Link>
+                  <div key={link.href} className="group/nav relative py-4">
+                    <Link
+                      href={link.href}
+                      className="block text-lg font-medium tracking-wide transition-colors group-hover/nav:opacity-60"
+                      style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
+                    >
+                      {link.label}
+                    </Link>
+                    {link.subLinks && (
+                      <div className="invisible absolute left-1/2 top-full mt-0 w-60 -translate-x-1/2 opacity-0 transition-all group-hover/nav:visible group-hover/nav:opacity-100 z-50">
+                        <div className="rounded-xl bg-white p-2 shadow-xl border" style={{ borderColor: 'var(--warm-gray-light)' }}>
+                          <Link href={link.href} className="block w-full rounded-md px-4 py-2.5 text-[0.95rem] font-semibold transition-colors hover:bg-black/5 mb-1" style={{ color: 'var(--brown)' }}>
+                            Wszystkie produkty
+                          </Link>
+                          {link.subLinks.map(sub => (
+                            <div key={sub.href} className="group/sub relative">
+                              <Link href={sub.href} className="flex w-full items-center justify-between rounded-md px-4 py-2 text-sm transition-colors hover:bg-black/5" style={{ color: 'var(--brown)' }}>
+                                {sub.label}
+                                {sub.hasSizes && <span className="opacity-50 text-[10px]">▶</span>}
+                              </Link>
+                              {sub.hasSizes && (
+                                <div className="invisible absolute left-full top-0 ml-1 w-48 opacity-0 transition-all group-hover/sub:visible group-hover/sub:opacity-100 z-50">
+                                  <div className="rounded-xl bg-white p-2 shadow-xl border" style={{ borderColor: 'var(--warm-gray-light)' }}>
+                                    <Link href={sub.href} className="block w-full rounded-md px-4 py-2 text-sm transition-colors hover:bg-black/5" style={{ color: 'var(--brown)' }}>Wszystkie rozmiary</Link>
+                                    {['XS', 'S', 'M', 'L'].map(size => (
+                                      <Link key={size} href={`${sub.href}&rozmiar=${size}`} className="block w-full rounded-md px-4 py-2 text-sm transition-colors hover:bg-black/5" style={{ color: 'var(--brown)' }}>
+                                        Rozmiar {size}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ))}
               </nav>
             </div>
@@ -161,15 +197,47 @@ export default function Header() {
         {/* Nav links */}
         <nav className="flex flex-1 flex-col gap-1 px-4 py-6" aria-label="Nawigacja mobilna">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="rounded-xl px-4 py-3.5 text-sm font-medium transition-colors hover:bg-black/5"
-              style={{ color: 'var(--brown)' }}
-            >
-              {link.label}
-            </Link>
+            <div key={link.href} className="flex flex-col">
+              <Link
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="rounded-xl px-4 py-3.5 text-sm font-medium transition-colors hover:bg-black/5"
+                style={{ color: 'var(--brown)' }}
+              >
+                {link.label}
+              </Link>
+              {link.subLinks && (
+                <div className="ml-4 flex flex-col gap-1 border-l pl-4 mb-2" style={{ borderColor: 'var(--warm-gray-light)' }}>
+                  {link.subLinks.map(sub => (
+                    <div key={sub.href} className="flex flex-col">
+                      <Link
+                        href={sub.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-xl px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
+                        style={{ color: 'var(--brown)' }}
+                      >
+                        {sub.label}
+                      </Link>
+                      {sub.hasSizes && (
+                        <div className="ml-4 flex flex-col gap-1 border-l pl-4 mb-1" style={{ borderColor: 'var(--warm-gray-light)' }}>
+                          {['XS', 'S', 'M', 'L'].map(size => (
+                            <Link
+                              key={size}
+                              href={`${sub.href}&rozmiar=${size}`}
+                              onClick={() => setMobileOpen(false)}
+                              className="rounded-xl px-4 py-1.5 text-xs font-medium transition-colors hover:bg-black/5"
+                              style={{ color: 'var(--warm-gray)' }}
+                            >
+                              Rozmiar {size}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
 

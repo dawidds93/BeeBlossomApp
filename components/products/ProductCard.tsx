@@ -52,7 +52,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
         ) : (
           <span className="text-5xl transition-transform duration-300 group-hover:scale-110">
-            {product.category?.slug === 'swiece' ? '🕯️' : '🌸'}
+            {product.category?.slug === 'flower-boxy-pure' ? '🌸' : product.category?.slug === 'flower-boxy-color' ? '🎨' : '🎁'}
           </span>
         )}
       </div>

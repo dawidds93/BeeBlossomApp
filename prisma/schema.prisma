@@ -33,6 +33,13 @@ enum PaymentMethod {
   BANK_TRANSFER
 }
 
+enum ProductSize {
+  XS
+  S
+  M
+  L
+}
+
 // ─── Category ────────────────────────────────────────────
 
 model Category {
@@ -63,6 +70,7 @@ model Product {
   sku         String?     @unique
   stock       Int         @default(0)
   images      String[]    // tablica URL-i zdjęć
+  size        ProductSize?
   isActive    Boolean     @default(true)
   isFeatured  Boolean     @default(false)
   weight      Float?      // gramy - do kalkulacji dostawy

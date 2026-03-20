@@ -34,7 +34,7 @@ export default function AboutSection() {
             >
               Tworzymy z pasji
               <br />
-              <em>i miłości do natury</em>
+              i miłości do natury
             </h2>
             <p className="mb-4 leading-relaxed" style={{ color: 'var(--warm-gray)' }}>
               Bee Blossom to mała rodzinna pracownia, w której każda świeca i każdy bukiet

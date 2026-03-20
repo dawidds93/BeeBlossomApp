@@ -15,6 +15,7 @@ const productSchema = z.object({
   isActive: z.boolean().default(true),
   categoryId: z.string().min(1, "Kategoria jest wymagana"),
   description: z.string().optional(),
+  size: z.enum(['XS', 'S', 'M', 'L']).optional().nullable(),
 });
 
 export async function createProduct(formData: z.infer<typeof productSchema>) {

@@ -19,6 +19,7 @@ const productSchema = z.object({
   isActive: z.boolean().default(true),
   categoryId: z.string().min(1, "Kategoria jest wymagana"),
   description: z.string().optional(),
+  size: z.enum(['XS', 'S', 'M', 'L']).optional().nullable(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -49,6 +50,7 @@ export default function ProductForm({ initialData, categories }: Props) {
       categoryId: "",
       description: "",
       comparePrice: undefined,
+      size: null,
     },
   });
 
@@ -145,6 +147,21 @@ export default function ProductForm({ initialData, categories }: Props) {
             ))}
           </select>
           {form.formState.errors.categoryId && <p className="text-red-500 text-sm">{form.formState.errors.categoryId.message}</p>}
+        </div>
+
+        {/* Size */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Rozmiar (opcjonalnie dla Boxów)</label>
+          <select 
+            {...form.register("size")} 
+            className="w-full p-2 border rounded bg-white"
+          >
+            <option value="">Brak rozmiaru</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+          </select>
         </div>
       </div>
 

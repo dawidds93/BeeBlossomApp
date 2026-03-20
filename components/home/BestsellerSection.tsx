@@ -56,7 +56,7 @@ export default async function BestsellerSection() {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-5xl">
-                      {product.category?.slug === 'swiece' ? '🕯️' : '🌸'}
+                      {product.category?.slug === 'flower-boxy-pure' ? '🌸' : product.category?.slug === 'flower-boxy-color' ? '🎨' : '🎁'}
                     </div>
                   )}
                 </div>

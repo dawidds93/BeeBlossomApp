@@ -8,13 +8,18 @@ import ProductFilters from '@/components/products/ProductFilters'
 import { ProductGridSkeleton } from '@/components/products/ProductSkeleton'
 
 interface PageProps {
-  searchParams: Promise<{ kategoria?: string }>
+  searchParams: Promise<{ kategoria?: string; rozmiar?: string }>
 }
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
-  const { kategoria } = await searchParams
-  const title = kategoria
-    ? `${kategoria.charAt(0).toUpperCase() + kategoria.slice(1)} – Sklep`
+  const { kategoria, rozmiar } = await searchParams
+  let displayName = kategoria;
+  if (kategoria === 'flower-boxy-pure') displayName = 'Pure';
+  else if (kategoria === 'flower-boxy-color') displayName = 'Color';
+  else if (kategoria === 'zestawy-upominkowe') displayName = 'Zestawy upominkowe';
+
+  const title = displayName
+    ? `${displayName.charAt(0).toUpperCase() + displayName.slice(1)} – Sklep`
     : 'Sklep – wszystkie produkty'
   return {
     title,
@@ -22,11 +27,12 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   }
 }
 
-async function ProductList({ kategoria }: { kategoria?: string }) {
+async function ProductList({ kategoria, rozmiar }: { kategoria?: string; rozmiar?: string }) {
   const products = await prisma.product.findMany({
     where: {
       isActive: true,
       ...(kategoria ? { category: { slug: kategoria } } : {}),
+      ...(rozmiar ? { size: rozmiar as any } : {}),
     },
     include: { category: true },
     orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
@@ -52,7 +58,7 @@ async function ProductList({ kategoria }: { kategoria?: string }) {
 }
 
 export default async function ProductsPage({ searchParams }: PageProps) {
-  const { kategoria } = await searchParams
+  const { kategoria, rozmiar } = await searchParams
   const categories = await prisma.category.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: 'asc' },
@@ -68,7 +74,9 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               className="mb-2 text-3xl md:text-4xl"
               style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
             >
-              {kategoria ? `Kategoria: ${kategoria}` : 'Wszystkie produkty'}
+              {kategoria 
+                ? `Kolekcja: ${kategoria === 'flower-boxy-pure' ? 'Pure' : kategoria === 'flower-boxy-color' ? 'Color' : kategoria === 'zestawy-upominkowe' ? 'Zestawy upominkowe' : kategoria}` 
+                : 'Wszystkie produkty'}
             </h1>
             <p className="text-sm" style={{ color: 'var(--warm-gray)' }}>
               Ręcznie robione z naturalnego wosku pszczelego
@@ -84,7 +92,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 
           {/* Grid */}
           <Suspense fallback={<ProductGridSkeleton />}>
-            <ProductList kategoria={kategoria} />
+            <ProductList kategoria={kategoria} rozmiar={rozmiar} />
           </Suspense>
         </div>
       </Container>

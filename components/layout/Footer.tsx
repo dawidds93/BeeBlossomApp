@@ -4,9 +4,9 @@ import Container from '@/components/ui/Container'
 
 const shopLinks = [
   { href: '/produkty', label: 'Wszystkie produkty' },
-  { href: '/produkty?kategoria=swiece', label: 'Świece z wosku' },
-  { href: '/produkty?kategoria=bukiety', label: 'Bukiety woskowe' },
-  { href: '/produkty?kategoria=zestawy', label: 'Zestawy prezentowe' },
+  { href: '/produkty?kategoria=flower-boxy-pure', label: 'Flower boxy - Pure' },
+  { href: '/produkty?kategoria=flower-boxy-color', label: 'Flower boxy - Color' },
+  { href: '/produkty?kategoria=zestawy-upominkowe', label: 'Zestawy upominkowe' },
 ]
 
 const legalLinks = [
@@ -44,7 +44,7 @@ export default function Footer() {
               />
             </Link>
             <p className="mb-6 text-sm leading-relaxed" style={{ color: 'var(--warm-gray-light)' }}>
-              Ręcznie robione świece i bukiety z naturalnego wosku pszczelego. Tworzymy z pasją,
+              Ręcznie robione flower boxy i zestawy upominkowe. Tworzymy z pasją,
               dbając o każdy detal.
             </p>
             {/* Social media */}
