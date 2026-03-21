@@ -18,12 +18,35 @@ export function getConsent(): ConsentState | null {
   }
 }
 
+/** Delete all _ga* cookies set by Google Analytics */
+function deleteGaCookies() {
+  if (typeof document === 'undefined') return
+  const hostname = window.location.hostname
+  // Try all domain variants – GA sets cookies on the root domain with a leading dot
+  const domains = [hostname, `.${hostname}`]
+
+  document.cookie.split(';').forEach((cookie) => {
+    const name = cookie.trim().split('=')[0].trim()
+    if (!name.startsWith('_ga')) return
+    // Expire the cookie for every domain variant and the current path
+    domains.forEach((domain) => {
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${domain}`
+    })
+    // Also try without explicit domain (catches localhost)
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+  })
+}
+
 export function saveConsent(state: ConsentState): void {
   if (typeof window === 'undefined') return
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
 
-  // Call gtag DIRECTLY — avoids race condition where the afterInteractive
-  // event listener script may not yet be registered when the user clicks Accept.
+  // If analytics is being turned OFF, delete existing GA4 cookies immediately
+  if (!state.analytics) {
+    deleteGaCookies()
+  }
+
+  // Update consent signals in GA4 directly (no event listener race condition)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const gtag = (window as any).gtag
   if (typeof gtag === 'function') {
