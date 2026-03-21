@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import Container from '@/components/ui/Container'
@@ -16,6 +18,7 @@ const legalLinks = [
   { href: '/zwroty', label: 'Zwroty i reklamacje' },
   { href: '/kontakt', label: 'Kontakt' },
 ]
+
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -127,10 +130,20 @@ export default function Footer() {
             style={{ color: 'var(--warm-gray)' }}
           >
             <p>© {year} Bee Blossom. Wszelkie prawa zastrzeżone.</p>
-            <p>NIP: 000-000-00-00 &nbsp;·&nbsp; REGON: 000000000</p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <p>NIP: 000-000-00-00 &nbsp;·&nbsp; REGON: 000000000</p>
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cookie-settings'))}
+                className="cursor-pointer transition-opacity hover:opacity-70"
+                style={{ color: 'var(--warm-gray)' }}
+              >
+                ⚙️ Ustawienia cookies
+              </button>
+            </div>
           </div>
         </Container>
       </div>
+
     </footer>
   )
 }

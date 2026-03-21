@@ -1,7 +1,7 @@
 import AnnouncementBar from '@/components/layout/AnnouncementBar'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import CookieConsent from '@/components/ui/CookieConsent'
+import CookieBanner from '@/components/cookies/CookieBanner'
 import CartDrawer from '@/components/cart/CartDrawer'
 
 interface ShopLayoutProps {
@@ -16,7 +16,8 @@ export default function ShopLayout({ children }: ShopLayoutProps) {
       <main className="flex-1">{children}</main>
       <Footer />
       <CartDrawer />
-      <CookieConsent />
+      <CookieBanner />
     </div>
   )
 }
+
