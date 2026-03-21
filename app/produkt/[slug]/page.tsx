@@ -7,6 +7,7 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import ProductGallery from '@/components/products/ProductGallery'
 import AddToCartButton from '@/components/products/AddToCartButton'
 import ProductCard from '@/components/products/ProductCard'
+import ExpandableDescription from '@/components/products/ExpandableDescription'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -155,9 +156,7 @@ export default async function ProductPage({ params }: PageProps) {
 
             {/* Description */}
             {product.description && (
-              <p className="mb-6 leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--warm-gray)' }}>
-                {product.description}
-              </p>
+              <ExpandableDescription text={product.description} />
             )}
 
             {/* Add to cart */}
