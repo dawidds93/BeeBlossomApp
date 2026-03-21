@@ -21,6 +21,19 @@ export function getConsent(): ConsentState | null {
 export function saveConsent(state: ConsentState): void {
   if (typeof window === 'undefined') return
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+
+  // Call gtag DIRECTLY — avoids race condition where the afterInteractive
+  // event listener script may not yet be registered when the user clicks Accept.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const gtag = (window as any).gtag
+  if (typeof gtag === 'function') {
+    gtag('consent', 'update', buildGtagConsent(state))
+    if (state.analytics) {
+      gtag('event', 'page_view')
+    }
+  }
+
+  // Dispatch event for any future listeners
   window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: state }))
 }
 

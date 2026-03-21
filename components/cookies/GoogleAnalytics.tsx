@@ -8,9 +8,10 @@ export default function GoogleAnalytics() {
   return (
     <>
       {/*
-        Consent Mode v2 default – must run BEFORE the GA4 script loads.
-        All signals start as 'denied'; they are updated to 'granted'
-        by CookieBanner → saveConsent() → gtag('consent', 'update', …)
+        Consent Mode v2 default – runs BEFORE the GA4 script loads.
+        All signals start as 'denied'. They are updated to 'granted'
+        directly by saveConsent() in lib/cookieConsent.ts when the
+        user interacts with the cookie banner.
       */}
       <Script id="ga-consent-default" strategy="beforeInteractive">
         {`
@@ -33,32 +34,12 @@ export default function GoogleAnalytics() {
         strategy="afterInteractive"
       />
 
-      {/* GA4 config */}
+      {/* GA4 config + restore consent from localStorage for returning visitors */}
       <Script id="ga-config" strategy="afterInteractive">
-        {`gtag('config', '${GA_ID}', { send_page_view: false });`}
-      </Script>
-
-      {/*
-        Listen for consent updates dispatched by saveConsent()
-        and push them to GA4 via gtag('consent', 'update', …)
-      */}
-      <Script id="ga-consent-listener" strategy="afterInteractive">
         {`
-          window.addEventListener('cookie-consent-updated', function(e) {
-            var s = e.detail;
-            var granted = function(v) { return v ? 'granted' : 'denied'; };
-            gtag('consent', 'update', {
-              analytics_storage:  granted(s.analytics),
-              ad_storage:         granted(s.marketing),
-              ad_user_data:       granted(s.marketing),
-              ad_personalization: granted(s.marketing),
-            });
-            if (s.analytics) {
-              gtag('event', 'page_view');
-            }
-          });
+          gtag('config', '${GA_ID}', { send_page_view: false });
 
-          // Restore consent from localStorage on page load
+          // Restore consent for returning visitors who already made a choice
           (function() {
             try {
               var raw = localStorage.getItem('bee_cookie_consent');
