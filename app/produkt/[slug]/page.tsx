@@ -155,7 +155,7 @@ export default async function ProductPage({ params }: PageProps) {
 
             {/* Description */}
             {product.description && (
-              <p className="mb-6 leading-relaxed" style={{ color: 'var(--warm-gray)' }}>
+              <p className="mb-6 leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--warm-gray)' }}>
                 {product.description}
               </p>
             )}

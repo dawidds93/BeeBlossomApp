@@ -59,10 +59,16 @@ export default function ProductForm({ initialData, categories }: Props) {
       setLoading(true);
       data.images = images;
       
+      let res;
       if (initialData) {
-        await updateProduct(initialData.id, data);
+        res = await updateProduct(initialData.id, data);
       } else {
-        await createProduct(data);
+        res = await createProduct(data);
+      }
+      
+      if (!res?.success) {
+        alert(res?.error || "Wystąpił błąd podczas zapisywania produktu");
+        return;
       }
       
       router.push("/admin/products");

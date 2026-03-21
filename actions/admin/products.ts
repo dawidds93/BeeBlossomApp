@@ -22,32 +22,46 @@ export async function createProduct(formData: z.infer<typeof productSchema>) {
   await requireAdmin();
   const parsed = productSchema.parse(formData);
 
-  const newProduct = await prisma.product.create({
-    data: {
-      ...parsed,
-    },
-  });
+  try {
+    const newProduct = await prisma.product.create({
+      data: {
+        ...parsed,
+      },
+    });
 
-  revalidatePath("/admin/products");
-  revalidatePath("/produkty");
-  return { success: true };
+    revalidatePath("/admin/products");
+    revalidatePath("/produkty");
+    return { success: true };
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      return { success: false, error: "Produkt z takim identyfikatorem URL (slug) już istnieje. Proszę wpisać inny." };
+    }
+    throw error;
+  }
 }
 
 export async function updateProduct(id: string, formData: z.infer<typeof productSchema>) {
   await requireAdmin();
   const parsed = productSchema.parse(formData);
 
-  const updatedProduct = await prisma.product.update({
-    where: { id },
-    data: {
-      ...parsed,
-    },
-  });
+  try {
+    const updatedProduct = await prisma.product.update({
+      where: { id },
+      data: {
+        ...parsed,
+      },
+    });
 
-  revalidatePath("/admin/products");
-  revalidatePath("/produkty");
-  revalidatePath(`/produkt/${parsed.slug}`);
-  return { success: true };
+    revalidatePath("/admin/products");
+    revalidatePath("/produkty");
+    revalidatePath(`/produkt/${parsed.slug}`);
+    return { success: true };
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      return { success: false, error: "Produkt z takim identyfikatorem URL (slug) już istnieje. Proszę wpisać inny." };
+    }
+    throw error;
+  }
 }
 
 export async function deleteProduct(id: string) {
