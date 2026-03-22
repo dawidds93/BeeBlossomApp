@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("[REGISTER]", err)
     return NextResponse.json(
-      { error: "Wystąpił błąd serwera. Spróbuj ponownie." },
+      { error: `Szczegóły błędu na serwerze: ${err instanceof Error ? err.message : String(err)}` },
       { status: 500 }
     )
   }
