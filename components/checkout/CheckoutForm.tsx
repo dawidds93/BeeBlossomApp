@@ -3,6 +3,8 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { useEffect } from 'react'
 import { useCartStore } from '@/lib/store/cart'
 import { checkoutSchema, type CheckoutFormData } from '@/lib/validators/checkout'
 import Button from '@/components/ui/Button'
@@ -36,8 +38,15 @@ function InputField({
   )
 }
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ 
+  defaultAddress, 
+  defaultPhone 
+}: { 
+  defaultAddress?: any | null, 
+  defaultPhone?: string | null 
+}) {
   const router = useRouter()
+  const { data: session } = useSession()
   const { items, getTotalPrice, clearCart } = useCartStore()
 
   const {
@@ -45,10 +54,27 @@ export default function CheckoutForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
+    reset,
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: { acceptMarketing: false },
   })
+
+  useEffect(() => {
+    if (session?.user || defaultAddress) {
+      const parts = session?.user?.name?.split(' ') || []
+      reset((prev) => ({
+        ...prev,
+        firstName: defaultAddress?.firstName || parts[0] || '',
+        lastName: defaultAddress?.lastName || parts.slice(1).join(' ') || '',
+        email: session?.user?.email || '',
+        phone: defaultPhone || '',
+        street: defaultAddress?.street || '',
+        postalCode: defaultAddress?.postalCode || '',
+        city: defaultAddress?.city || '',
+      }))
+    }
+  }, [session, defaultAddress, defaultPhone, reset])
 
   const onSubmit = async (data: CheckoutFormData) => {
     if (items.length === 0) return
@@ -81,12 +107,19 @@ export default function CheckoutForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <h2
-        className="mb-6 text-lg font-semibold"
-        style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
-      >
-        Dane do wysyłki
-      </h2>
+      <div className="mb-6 flex items-center justify-between">
+        <h2
+          className="text-lg font-semibold m-0"
+          style={{ fontFamily: 'var(--font-serif)', color: 'var(--brown)' }}
+        >
+          Dane do wysyłki
+        </h2>
+        {session?.user && (
+          <span className="text-xs px-3 py-1 bg-amber-50 text-amber-800 rounded-full font-medium">
+            Kupujesz jako <b>{session.user.email}</b>
+          </span>
+        )}
+      </div>
 
       {/* Name row */}
       <div className="mb-4 grid grid-cols-2 gap-4">

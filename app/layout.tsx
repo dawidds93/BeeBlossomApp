@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import GoogleAnalytics from '@/components/cookies/GoogleAnalytics'
+import { Providers } from './providers'
 
 export const metadata: Metadata = {
   title: {
@@ -40,7 +41,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {/* GoogleAnalytics must live in <body>, not <head>, for next/script to work correctly in App Router */}
         <GoogleAnalytics />
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )

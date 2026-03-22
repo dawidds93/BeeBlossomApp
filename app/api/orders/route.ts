@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { registerTransaction } from '@/lib/przelewy24'
 import { sendOrderConfirmation } from '@/lib/email'
+import { auth } from '@/auth'
 import type { CheckoutFormData } from '@/lib/validators/checkout'
 import type { CartItem } from '@/lib/store/cart'
 
@@ -36,11 +37,13 @@ export async function POST(request: Request) {
     const shippingCost = subtotal >= FREE_SHIPPING ? 0 : SHIPPING_COST
     const totalAmount = subtotal + shippingCost
     const orderNumber = await generateOrderNumber()
+    const session = await auth()
 
     // Create order with items in transaction
     const order = await prisma.order.create({
       data: {
         orderNumber,
+        userId: session?.user?.id || null,
         guestEmail: customer.email,
         guestPhone: customer.phone,
         shippingSnapshot: {

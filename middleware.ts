@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 const { auth } = NextAuth(authConfig);
 
 const adminRoutes = ["/admin"];
+const protectedRoutes = ["/konto"];
 
 export default auth((req) => {
   const { nextUrl } = req;

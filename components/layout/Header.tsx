@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { User, Menu, X, Search } from 'lucide-react'
 import Container from '@/components/ui/Container'
 import CartButton from '@/components/cart/CartButton'
+import UserMenu from '@/components/layout/UserMenu'
 
 const navLinks = [
   { 
@@ -126,14 +127,7 @@ export default function Header() {
               >
                 <Search size={22} strokeWidth={1.5} />
               </button>
-              <Link
-                href="/konto"
-                className="hidden cursor-pointer rounded-full p-2 transition-colors hover:bg-black/5 md:flex"
-                aria-label="Moje konto"
-                style={{ color: 'var(--brown)' }}
-              >
-                <User size={22} strokeWidth={1.5} />
-              </Link>
+              <UserMenu />
               <div className="scale-110">
                 <CartButton />
               </div>
@@ -245,6 +239,27 @@ export default function Header() {
         <div className="border-t px-4 py-6" style={{ borderColor: 'var(--warm-gray-light)' }}>
           <p
             className="mb-3 px-4 text-xs font-semibold tracking-widest uppercase"
+            style={{ color: 'var(--warm-gray)' }}
+          >
+            Moje konto
+          </p>
+          {[
+            { href: '/konto', label: 'Dashboard konta' },
+            { href: '/konto/zamowienia', label: 'Historia zamówień' },
+          ].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className="block rounded-xl px-4 py-2 text-sm font-medium transition-colors hover:bg-black/5"
+              style={{ color: 'var(--brown)' }}
+            >
+              {link.label}
+            </Link>
+          ))}
+          
+          <p
+            className="mb-3 mt-4 px-4 text-xs font-semibold tracking-widest uppercase"
             style={{ color: 'var(--warm-gray)' }}
           >
             Informacje prawne
